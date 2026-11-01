@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if lente else 'Nuevo' }} lente · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta formulario ancho">
+    <h2>{{ 'Editar lente' if lente else 'Agregar lente' }}</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label>Nombre del modelo *</label>
+        <input type="text" name="nombre" value="{{ valores.get('nombre', '') }}" required>
+
+        <label>Marca *</label>
+        <input type="text" name="marca" value="{{ valores.get('marca', '') }}" required>
+
+        <label>Forma</label>
+        <input type="text" name="forma" list="formas" value="{{ valores.get('forma', '') }}">
+        <datalist id="formas">
+            <option value="redondo"><option value="cuadrado"><option value="rectangular">
+            <option value="aviador"><option value="cat eye"><option value="ovalado">
+        </datalist>
+
+        <label>Material</label>
+        <input type="text" name="material" list="materiales" value="{{ valores.get('material', '') }}">
+        <datalist id="materiales">
+            <option value="acetato"><option value="metal"><option value="titanio">
+            <option value="silicona"><option value="madera">
+        </datalist>
+
+        <label>Color</label>
+        <input type="text" name="color" value="{{ valores.get('color', '') }}">
+
+        <label>Para</label>
+        <select name="genero">
+            {% for g in ['unisex', 'hombre', 'mujer', 'niño'] %}
+                <option value="{{ g }}" {% if valores.get('genero') == g %}selected{% endif %}>{{ g|capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Precio (MXN) *</label>
+        <input type="number" name="precio" step="0.01" min="0" value="{{ valores.get('precio', '') }}" required>
+
+        <label>Descripción</label>
+        <textarea name="descripcion" rows="4">{{ valores.get('descripcion', '') }}</textarea>
+
+        <label>Foto (PNG, JPG o WEBP, máx. 3 MB)</label>
+        {% if lente and lente.imagen %}
+            <img class="mini grande-mini" src="{{ url_for('static', filename='img/lentes/' + lente.imagen) }}" alt="">
+            <p class="nota-izq">Si subes otra foto, reemplazará la actual.</p>
+        {% endif %}
+        <input type="file" name="imagen" accept=".png,.jpg,.jpeg,.webp">
+
+        <label class="casilla">
+            <input type="checkbox" name="disponible" {% if 'disponible' in valores %}checked{% endif %}>
+            Visible en el catálogo
+        </label>
+
+        <button type="submit" class="boton">Guardar</button>
+        <a href="{{ url_for('doctor_lentes') }}" class="limpiar">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

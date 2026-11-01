@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}Registro · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta formulario">
+    <h2>Crear cuenta</h2>
+    <form method="POST">
+        <label>Nombre(s)</label>
+        <input type="text" name="nombre" value="{{ datos.get('nombre', '') }}" required>
+
+        <label>Apellidos</label>
+        <input type="text" name="apellidos" value="{{ datos.get('apellidos', '') }}" required>
+
+        <label>Correo electrónico</label>
+        <input type="email" name="email" value="{{ datos.get('email', '') }}" required>
+
+        <label>Teléfono</label>
+        <input type="tel" name="telefono" value="{{ datos.get('telefono', '') }}">
+
+        <label>Fecha de nacimiento</label>
+        <input type="date" name="fecha_nacimiento" value="{{ datos.get('fecha_nacimiento', '') }}">
+
+        <label>Contraseña (mínimo 8 caracteres)</label>
+        <input type="password" name="password" required>
+
+        <label>Confirmar contraseña</label>
+        <input type="password" name="confirmar" required>
+
+                <label class="casilla-linea">
+            <input type="checkbox" name="acepto" required>
+            <span>He leído y acepto el <a href="{{ url_for('privacidad') }}" target="_blank">aviso de privacidad</a>.</span>
+        </label>
+    </form>
+    <p class="nota">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
+</div>
+{% endblock %}

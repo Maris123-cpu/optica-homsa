@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Mi panel · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Hola, {{ current_user.nombre }} 👋</h2>
+
+<div class="rejilla">
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('mis_citas') }}">
+        <h3>📅 Mis citas</h3>
+        {% if proxima %}
+            <p>Próxima cita:</p>
+            <p><strong>{{ proxima.fecha_hora|fecha_larga }}</strong><br>{{ proxima.fecha_hora|hora }}</p>
+        {% else %}
+            <p>No tienes citas próximas.</p>
+        {% endif %}
+    </a>
+        <a class="tarjeta enlace-tarjeta" href="{{ url_for('mis_recetas') }}">
+        <h3>📄 Mis recetas</h3>
+        <p>Consulta e imprime tus recetas</p>
+    </a>
+
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('cita_nueva') }}">
+        <h3>➕ Agendar cita</h3>
+        <p>Elige día y hora</p>
+    </a>
+
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('catalogo') }}">
+        <h3>👓 Catálogo de lentes</h3>
+        <p>Explora nuestros modelos</p>
+    </a>
+
+        <a class="tarjeta enlace-tarjeta" href="{{ url_for('test_inicio') }}">
+        <h3>👁️ Test de visión</h3>
+        <p>Agudeza, colores y astigmatismo</p>
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Mi cuenta · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Mi cuenta</h2>
+
+<div class="rejilla">
+    <div class="tarjeta formulario">
+        <h3>Mis datos</h3>
+        <form method="POST" action="{{ url_for('cuenta_perfil') }}">
+            <label>Correo electrónico</label>
+            <input type="email" value="{{ current_user.email }}" disabled>
+
+            <label>Nombre(s)</label>
+            <input type="text" name="nombre" value="{{ current_user.nombre }}" required>
+
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" value="{{ current_user.apellidos }}" required>
+
+            <label>Teléfono</label>
+            <input type="tel" name="telefono" value="{{ current_user.telefono or '' }}">
+
+            <label>Fecha de nacimiento</label>
+            <input type="date" name="fecha_nacimiento" value="{{ current_user.fecha_nacimiento or '' }}">
+
+            {% if current_user.es_doctor %}
+                <label>Cédula profesional (aparece en las recetas)</label>
+                <input type="text" name="cedula" maxlength="30" value="{{ current_user.cedula or '' }}">
+            {% endif %}
+
+            <button type="submit" class="boton">Guardar cambios</button>
+        </form>
+    </div>
+
+    <div class="tarjeta formulario">
+        <h3>Cambiar contraseña</h3>
+        <form method="POST" action="{{ url_for('cuenta_password') }}">
+            <label>Contraseña actual</label>
+            <input type="password" name="actual" required>
+
+            <label>Nueva contraseña (mínimo 8 caracteres)</label>
+            <input type="password" name="nueva" required>
+
+            <label>Confirmar nueva contraseña</label>
+            <input type="password" name="confirmar" required>
+
+            <button type="submit" class="boton">Cambiar contraseña</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

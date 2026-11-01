@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}Receta · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="no-imprimir encabezado-fila">
+    {% if current_user.es_doctor %}
+        <a href="{{ url_for('doctor_expediente', cliente_id=r.cliente_id) }}">← Volver al expediente</a>
+    {% else %}
+        <a href="{{ url_for('mis_recetas') }}">← Mis recetas</a>
+    {% endif %}
+    <button type="button" class="boton" onclick="window.print()">🖨️ Imprimir</button>
+</div>
+
+<div class="tarjeta receta separado">
+    <h2>👓 Óptica HomSa</h2>
+    <p class="etiquetas">Receta oftálmica</p>
+    <hr>
+    <p><strong>Paciente:</strong> {{ r.cliente.nombre_completo }} &nbsp;·&nbsp; <strong>Edad:</strong> {{ r.cliente.fecha_nacimiento|edad }}</p>
+    <p><strong>Fecha:</strong> {{ r.fecha|fecha_larga }}</p>
+
+    <table class="tabla receta-tabla">
+        <thead><tr><th></th><th>Esfera</th><th>Cilindro</th><th>Eje</th></tr></thead>
+        <tbody>
+            <tr>
+                <th>Ojo derecho (OD)</th>
+                <td>{{ r.od_esfera|dioptria }}</td><td>{{ r.od_cilindro|dioptria }}</td><td>{{ r.od_eje|grados }}</td>
+            </tr>
+            <tr>
+                <th>Ojo izquierdo (OI)</th>
+                <td>{{ r.oi_esfera|dioptria }}</td><td>{{ r.oi_cilindro|dioptria }}</td><td>{{ r.oi_eje|grados }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Adición:</strong> {{ r.adicion|dioptria }}
+       &nbsp;·&nbsp; <strong>Distancia pupilar:</strong> {{ (r.distancia_pupilar ~ ' mm') if r.distancia_pupilar is not none else '—' }}</p>
+
+    {% if r.observaciones %}
+        <p><strong>Observaciones:</strong><br>{{ r.observaciones }}</p>
+    {% endif %}
+
+    <div class="firma">
+        <div class="linea-firma"></div>
+        <p>{{ r.doctor.nombre_completo }}</p>
+                {% if r.doctor.cedula %}<p>Cédula profesional: {{ r.doctor.cedula }}</p>{% endif %}
+    </div>
+</div>
+{% endblock %}

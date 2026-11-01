@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="tarjeta formulario">
+    <h2>Acceso no permitido</h2>
+    <p>No tienes permiso para ver esta página.</p>
+    <a class="boton" href="{{ url_for('inicio') }}">Volver al inicio</a>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Astigmatismo · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('test_inicio') }}">← Volver a las pruebas</a>
+<h2>Prueba de astigmatismo</h2>
+
+<div class="test" id="test" data-guardar="{{ url_for('test_guardar') }}">
+
+    <section class="tarjeta separado centrado">
+        <ul class="lista-pasos izquierda">
+            <li>Ponte a unos 50 cm de la pantalla. Déjate puestos tus lentes si los usas.</li>
+            <li>Cubre un ojo con la palma de la mano.</li>
+            <li>Mira el centro de la rueda sin mover la vista.</li>
+        </ul>
+        <canvas id="rueda" width="360" height="360"></canvas>
+    </section>
+
+    <section id="paso-respuesta" class="tarjeta separado test">
+        <h3>¿Qué ves?</h3>
+        <label for="ojo">Ojo que estás evaluando</label>
+        <select id="ojo">
+            <option value="derecho">Ojo derecho</option>
+            <option value="izquierdo">Ojo izquierdo</option>
+            <option value="ambos">Ambos ojos</option>
+        </select>
+
+        <label class="casilla-linea">
+            <input type="radio" name="respuesta" value="igual">
+            Todas las líneas se ven igual de oscuras y nítidas
+        </label>
+        <label class="casilla-linea">
+            <input type="radio" name="respuesta" value="desigual">
+            Algunas líneas se ven más oscuras, gruesas o borrosas que otras
+        </label>
+
+        <button type="button" id="btn-guardar" class="boton">Guardar resultado</button>
+    </section>
+
+    <div id="resultado" class="alerta separado" hidden></div>
+    <div id="acciones-final" class="separado" hidden>
+        <a class="boton" href="{{ url_for('test_astigmatismo') }}">Evaluar el otro ojo</a>
+        <a class="boton secundario" href="{{ url_for('cita_nueva') }}">Agendar una cita</a>
+        <a href="{{ url_for('test_historial') }}">Ver mi historial</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/test_comun.js') }}"></script>
+<script src="{{ url_for('static', filename='js/astigmatismo.js') }}"></script>
+{% endblock %}

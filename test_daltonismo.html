@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Visión de colores · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('test_inicio') }}">← Volver a las pruebas</a>
+<h2>Prueba de visión de colores</h2>
+
+<div class="test" id="test" data-guardar="{{ url_for('test_guardar') }}">
+
+    <section id="paso-inicio" class="tarjeta separado">
+        <h3>Antes de empezar</h3>
+        <ul class="lista-pasos">
+            <li>Usa un lugar con buena luz y pon el <strong>brillo de la pantalla al máximo</strong>.</li>
+            <li><strong>Desactiva</strong> el modo nocturno o cualquier filtro de luz azul: alteran los colores y falsean la prueba.</li>
+            <li>Usa tus dos ojos y déjate puestos tus lentes si los usas.</li>
+            <li>En cada lámina hay un número de un dígito escondido. Escríbelo. Si no ves ninguno, presiona <strong>No veo ningún número</strong>.</li>
+        </ul>
+        <button type="button" id="btn-iniciar" class="boton">Comenzar</button>
+    </section>
+
+    <section id="paso-prueba" class="tarjeta separado centrado" hidden>
+        <p id="info-lamina" class="nota-izq"></p>
+        <canvas id="lamina" width="340" height="340"></canvas>
+        <div class="fila-form centrado-fila">
+            <input type="number" id="respuesta" min="0" max="9" placeholder="Número" class="campo-numero">
+            <button type="button" id="btn-responder" class="boton">Responder</button>
+            <button type="button" id="btn-no-veo" class="boton secundario">No veo ningún número</button>
+        </div>
+    </section>
+
+    <div id="resultado" class="alerta separado" hidden></div>
+    <div id="acciones-final" class="separado" hidden>
+        <a class="boton" href="{{ url_for('test_daltonismo') }}">Repetir prueba</a>
+        <a class="boton secundario" href="{{ url_for('cita_nueva') }}">Agendar una cita</a>
+        <a href="{{ url_for('test_historial') }}">Ver mi historial</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/test_comun.js') }}"></script>
+<script src="{{ url_for('static', filename='js/daltonismo.js') }}"></script>
+{% endblock %}

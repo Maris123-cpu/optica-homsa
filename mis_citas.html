@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "_macros.html" import insignia_estado %}
+{% block titulo %}Mis citas · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="encabezado-fila">
+    <h2>Mis citas</h2>
+    <a href="{{ url_for('cita_nueva') }}" class="boton">+ Agendar cita</a>
+</div>
+
+<h3>Próximas</h3>
+{% if proximas %}
+<div class="rejilla">
+    {% for c in proximas %}
+    <div class="tarjeta">
+        <p class="etiquetas">{{ c.fecha_hora|fecha_larga }}</p>
+        <h3>{{ c.fecha_hora|hora }}</h3>
+        <p>{{ c.motivo }}</p>
+        <p class="etiquetas">Con {{ c.doctor.nombre_completo }}</p>
+        <p>{{ insignia_estado(c.estado) }}</p>
+
+        {% if puede_cancelar(c) %}
+        <form method="POST" action="{{ url_for('cita_cancelar', cita_id=c.id) }}"
+              onsubmit="return confirm('¿Seguro que quieres cancelar esta cita?');">
+            <button type="submit" class="enlace peligro">Cancelar cita</button>
+        </form>
+        {% else %}
+            <p class="nota-izq">Faltan menos de 2 horas: para cambios comunícate con la óptica.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <div class="tarjeta"><p>No tienes citas próximas.</p></div>
+{% endif %}
+
+<h3 class="separado">Historial</h3>
+{% if historial %}
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead><tr><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead>
+        <tbody>
+        {% for c in historial %}
+            <tr>
+                <td>{{ c.fecha_hora|fecha_larga }}</td>
+                <td>{{ c.fecha_hora|hora }}</td>
+                <td>{{ c.motivo }}</td>
+                <td>{{ insignia_estado(c.estado) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <div class="tarjeta"><p>Aún no tienes historial.</p></div>
+{% endif %}
+{% endblock %}

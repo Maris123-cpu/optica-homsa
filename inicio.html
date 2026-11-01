@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<section class="portada">
+    <h1>Bienvenido a Óptica HomSa</h1>
+    <p>Agenda tu cita, conoce nuestros lentes y revisa tu visión desde casa.</p>
+    <a class="boton" href="{{ url_for('catalogo') }}">Ver lentes</a>
+    {% if not current_user.is_authenticated %}
+        <a class="boton secundario" href="{{ url_for('registro') }}">Crear mi cuenta</a>
+    {% elif not current_user.es_doctor %}
+        <a class="boton secundario" href="{{ url_for('cita_nueva') }}">Agendar una cita</a>
+    {% endif %}
+</section>
+
+<section class="rejilla">
+    <div class="tarjeta">
+        <h3>📅 Citas en línea</h3>
+        <p>Elige el día y la hora que mejor te acomode, sin llamadas ni filas.</p>
+    </div>
+    <div class="tarjeta">
+        <h3>👓 Catálogo de lentes</h3>
+        <p>Compara marcas, formas y materiales antes de venir a probártelos.</p>
+    </div>
+    <div class="tarjeta">
+        <h3>👁️ Test de visión</h3>
+        <p>Una revisión rápida de agudeza, colores y astigmatismo desde tu casa.</p>
+    </div>
+</section>
+
+<section class="tarjeta horario separado">
+    <h3>🕗 Horario de atención</h3>
+    <p>Lunes a viernes de <strong>8:00 am a 5:00 pm</strong>. Cada cita dura 30 minutos.</p>
+</section>
+{% endblock %}

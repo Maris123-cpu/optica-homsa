@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Historial de pruebas · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="encabezado-fila">
+    <h2>Mi historial de pruebas</h2>
+    <a href="{{ url_for('test_inicio') }}" class="boton">Hacer una prueba</a>
+</div>
+
+{% if filas %}
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead>
+            <tr><th>Fecha</th><th>Prueba</th><th>Resultado</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+        {% for f in filas %}
+            <tr>
+                <td>{{ f.fecha|fecha_larga }}<br><small>{{ f.fecha|hora }}</small></td>
+                <td>{{ f.nombre }}</td>
+                <td>{{ f.mensaje }}</td>
+                <td>
+                    {% if f.nivel == 'bien' %}
+                        <span class="insignia verde">Dentro de lo esperado</span>
+                    {% else %}
+                        <span class="insignia amarilla">Conviene revisarlo</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="tarjeta">
+    <p>Todavía no has hecho ninguna prueba.</p>
+</div>
+{% endif %}
+{% endblock %}

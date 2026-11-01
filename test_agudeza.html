@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block titulo %}Agudeza visual · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('test_inicio') }}">← Volver a las pruebas</a>
+<h2>Prueba de agudeza visual</h2>
+
+<div class="test" id="test" data-guardar="{{ url_for('test_guardar') }}">
+
+    <div id="aviso-pantalla" class="alerta info" hidden>
+        Esta prueba funciona mejor en una computadora o laptop. En un celular la tarjeta de
+        calibración puede no caber en la pantalla.
+    </div>
+
+    <section id="paso-calibrar" class="tarjeta separado">
+        <h3>Paso 1: calibrar tu pantalla</h3>
+        <p>Para que las letras tengan el tamaño correcto, pon una tarjeta de plástico (como una
+           de banco) contra la pantalla y mueve la barra hasta que el rectángulo mida
+           <strong>exactamente el ancho de la tarjeta</strong>.</p>
+        <div id="tarjeta-ref" class="tarjeta-ref"></div>
+        <input type="range" id="ajuste" min="200" max="700" value="324">
+        <button type="button" id="btn-calibrado" class="boton">Ya coincide</button>
+    </section>
+
+    <section id="paso-config" class="tarjeta separado" hidden>
+        <h3>Paso 2: prepárate</h3>
+        <ul class="lista-pasos">
+            <li>Siéntate a <strong>1 metro</strong> de la pantalla (mídelo con una cinta o un hilo).</li>
+            <li>Si usas lentes o lentes de contacto, déjatelos puestos.</li>
+            <li>Cubre un ojo con la palma de la mano, sin presionar.</li>
+            <li>Verás una letra <strong>E</strong>. Indica hacia dónde apuntan sus "dientes" con las flechas del teclado.</li>
+            <li>Si no la distingues, presiona <strong>No lo veo</strong>. No adivines demasiado: es mejor ser honesto.</li>
+        </ul>
+        <label for="ojo">¿Qué ojo vas a evaluar?</label>
+        <select id="ojo">
+            <option value="derecho">Ojo derecho</option>
+            <option value="izquierdo">Ojo izquierdo</option>
+            <option value="ambos">Ambos ojos</option>
+        </select>
+        <button type="button" id="btn-iniciar" class="boton">Comenzar</button>
+    </section>
+
+    <section id="paso-prueba" class="separado" hidden>
+        <p id="info-linea" class="nota-izq"></p>
+        <div id="pantalla-e" class="pantalla-optotipo"></div>
+        <div class="botones-direccion">
+            <button type="button" class="boton" data-dir="izquierda">⬅</button>
+            <button type="button" class="boton" data-dir="arriba">⬆</button>
+            <button type="button" class="boton" data-dir="abajo">⬇</button>
+            <button type="button" class="boton" data-dir="derecha">➡</button>
+            <button type="button" class="boton secundario" data-dir="ninguna">No lo veo</button>
+        </div>
+    </section>
+
+    <div id="resultado" class="alerta separado" hidden></div>
+    <div id="acciones-final" class="separado" hidden>
+        <a class="boton" href="{{ url_for('test_agudeza') }}">Evaluar el otro ojo</a>
+        <a class="boton secundario" href="{{ url_for('cita_nueva') }}">Agendar una cita</a>
+        <a href="{{ url_for('test_historial') }}">Ver mi historial</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/test_comun.js') }}"></script>
+<script src="{{ url_for('static', filename='js/agudeza.js') }}"></script>
+{% endblock %}

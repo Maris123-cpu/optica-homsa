@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo cliente · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta formulario">
+    <h2>Registrar cliente</h2>
+    <p class="nota-izq">Para clientes que llegan a la óptica sin cuenta. Podrán entrar con su correo y la contraseña temporal que les des.</p>
+    <form method="POST">
+        <label>Nombre(s) *</label>
+        <input type="text" name="nombre" value="{{ datos.get('nombre', '') }}" required>
+
+        <label>Apellidos *</label>
+        <input type="text" name="apellidos" value="{{ datos.get('apellidos', '') }}" required>
+
+        <label>Correo electrónico *</label>
+        <input type="email" name="email" value="{{ datos.get('email', '') }}" required>
+
+        <label>Teléfono</label>
+        <input type="tel" name="telefono" value="{{ datos.get('telefono', '') }}">
+
+        <label>Fecha de nacimiento</label>
+        <input type="date" name="fecha_nacimiento" value="{{ datos.get('fecha_nacimiento', '') }}">
+
+        <label>Contraseña temporal * (mínimo 8 caracteres)</label>
+        <input type="text" name="password" required>
+
+        <button type="submit" class="boton">Registrar cliente</button>
+    </form>
+    <p class="nota"><a href="{{ url_for('doctor_clientes') }}">Cancelar</a></p>
+</div>
+{% endblock %}

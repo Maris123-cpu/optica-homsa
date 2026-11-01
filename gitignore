@@ -1,0 +1,20 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Archivos generados por Python
+__pycache__/
+*.pyc
+
+# Claves secretas (NUNCA subir)
+.env
+
+# Base de datos con datos de clientes (NUNCA subir)
+instance/
+*.db
+
+# Fotos subidas durante las pruebas
+static/img/lentes/
+
+# Editor
+.vscode/

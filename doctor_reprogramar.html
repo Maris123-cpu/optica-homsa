@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Reprogramar cita · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('agenda_doctor', fecha=cita.fecha_hora.date()) }}">← Volver a la agenda</a>
+<h2>Reprogramar cita</h2>
+
+<div class="tarjeta separado">
+    <p><strong>{{ cita.cliente.nombre_completo }}</strong> · {{ cita.motivo }}</p>
+    <p>Cita actual: {{ cita.fecha_hora|fecha_larga }}, {{ cita.fecha_hora|hora }}</p>
+</div>
+
+<div class="tarjeta agendar separado">
+    <h3>1. Elige el nuevo día</h3>
+    <form method="GET" class="fila-form">
+        <input type="date" name="fecha" min="{{ hoy }}" max="{{ maximo }}" value="{{ fecha or '' }}" required>
+        <button type="submit" class="boton">Ver horarios</button>
+    </form>
+</div>
+
+{% if fecha %}
+<div class="tarjeta agendar separado">
+    <h3>2. Elige la hora · {{ fecha|fecha_larga }}</h3>
+    {% if horarios %}
+    <form method="POST">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <div class="horarios">
+            {% for h in horarios %}
+            <label class="horario">
+                <input type="radio" name="hora" value="{{ h.strftime('%H:%M') }}" required>
+                <span>{{ h|hora }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="boton">Reprogramar</button>
+    </form>
+    {% else %}
+        <p>No hay horarios libres ese día. Prueba con otra fecha.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

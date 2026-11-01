@@ -1,0 +1,5 @@
+{% macro insignia_estado(estado) %}
+    {% set clases = {'pendiente': 'amarilla', 'confirmada': 'verde',
+                     'cancelada': 'roja', 'completada': 'azul'} %}
+    <span class="insignia {{ clases.get(estado, 'gris') }}">{{ estado|capitalize }}</span>
+{% endmacro %}

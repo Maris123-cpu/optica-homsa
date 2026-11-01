@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}{{ lente.nombre }} · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('catalogo') }}">← Volver al catálogo</a>
+
+<div class="tarjeta detalle">
+    <div class="detalle-foto">
+        {% if lente.imagen %}
+            <img src="{{ url_for('static', filename='img/lentes/' + lente.imagen) }}" alt="{{ lente.nombre }}">
+        {% else %}
+            <div class="sin-imagen grande">👓</div>
+        {% endif %}
+    </div>
+
+    <div class="detalle-info">
+        <small>{{ lente.marca }}</small>
+        <h2>{{ lente.nombre }}</h2>
+        {% if not lente.disponible %}
+            <p class="alerta info">Este lente está oculto del catálogo público.</p>
+        {% endif %}
+        <p class="precio grande">${{ "{:,.2f}".format(lente.precio) }}</p>
+        <p>{{ lente.descripcion }}</p>
+
+        <table class="tabla-datos">
+            <tr><th>Forma</th><td>{{ lente.forma|capitalize }}</td></tr>
+            <tr><th>Material</th><td>{{ lente.material|capitalize }}</td></tr>
+            <tr><th>Color</th><td>{{ lente.color|capitalize }}</td></tr>
+            <tr><th>Para</th><td>{{ lente.genero|capitalize }}</td></tr>
+        </table>
+
+                {% if current_user.is_authenticated and not current_user.es_doctor %}
+            <a href="{{ url_for('cita_nueva') }}" class="boton">Agendar cita para probármelo</a>
+        {% elif not current_user.is_authenticated %}
+            <a href="{{ url_for('registro') }}" class="boton">Crea tu cuenta para agendar cita</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if parecidos %}
+<h3>También te pueden gustar</h3>
+<div class="rejilla">
+    {% for p in parecidos %}
+    <a href="{{ url_for('lente_detalle', lente_id=p.id) }}" class="tarjeta lente-card">
+        {% if p.imagen %}
+            <img src="{{ url_for('static', filename='img/lentes/' + p.imagen) }}" alt="{{ p.nombre }}">
+        {% else %}
+            <div class="sin-imagen">👓</div>
+        {% endif %}
+        <small>{{ p.marca }}</small>
+        <h3>{{ p.nombre }}</h3>
+        <p class="precio">${{ "{:,.2f}".format(p.precio) }}</p>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Mis recetas · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Mis recetas</h2>
+
+{% if recetas %}
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead><tr><th>Fecha</th><th>Ojo derecho</th><th>Ojo izquierdo</th><th></th></tr></thead>
+        <tbody>
+        {% for r in recetas %}
+            <tr>
+                <td>{{ r.fecha|fecha_larga }}</td>
+                <td>{{ r.od_esfera|dioptria }} / {{ r.od_cilindro|dioptria }} × {{ r.od_eje|grados }}</td>
+                <td>{{ r.oi_esfera|dioptria }} / {{ r.oi_cilindro|dioptria }} × {{ r.oi_eje|grados }}</td>
+                <td><a href="{{ url_for('receta_ver', receta_id=r.id) }}">Ver / imprimir</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="tarjeta"><p>Aún no tienes recetas registradas.</p></div>
+{% endif %}
+{% endblock %}

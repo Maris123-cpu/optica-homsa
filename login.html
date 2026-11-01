@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Entrar · Optica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta formulario">
+    <h2>Iniciar sesión</h2>
+    <form method="POST">
+        <label>Correo electrónico</label>
+        <input type="email" name="email" required>
+
+        <label>Contraseña</label>
+        <input type="password" name="password" required>
+
+        <button type="submit" class="boton">Entrar</button>
+    </form>
+    <p class="nota">¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate</a></p>
+</div>
+{% endblock %}

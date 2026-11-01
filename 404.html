@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="tarjeta formulario">
+    <h2>Página no encontrada</h2>
+    <p>Lo que buscas no existe o ya no está disponible.</p>
+    <a class="boton" href="{{ url_for('catalogo') }}">Ver el catálogo</a>
+</div>
+{% endblock %}

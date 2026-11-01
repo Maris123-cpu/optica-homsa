@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% from "_macros.html" import insignia_estado %}
+{% block titulo %}{{ cliente.nombre_completo }} · Expediente{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('doctor_clientes') }}">← Volver a clientes</a>
+
+<div class="tarjeta separado">
+    <div class="encabezado-fila">
+        <h2>{{ cliente.nombre_completo }}</h2>
+        <a class="boton" href="{{ url_for('doctor_receta_nueva', cliente_id=cliente.id) }}">+ Nueva receta</a>
+    </div>
+    <table class="tabla-datos">
+        <tr><th>Correo</th><td>{{ cliente.email }}</td></tr>
+        <tr><th>Teléfono</th><td>{{ cliente.telefono or '—' }}</td></tr>
+        <tr><th>Edad</th><td>{{ cliente.fecha_nacimiento|edad }}</td></tr>
+        <tr><th>Cliente desde</th><td>{{ cliente.creado_en|fecha_larga }}</td></tr>
+    </table>
+</div>
+
+<h3 class="separado">Recetas</h3>
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead><tr><th>Fecha</th><th>Ojo derecho</th><th>Ojo izquierdo</th><th></th></tr></thead>
+        <tbody>
+        {% for r in recetas %}
+            <tr>
+                <td>{{ r.fecha|fecha_larga }}</td>
+                <td>{{ r.od_esfera|dioptria }} / {{ r.od_cilindro|dioptria }} × {{ r.od_eje|grados }}</td>
+                <td>{{ r.oi_esfera|dioptria }} / {{ r.oi_cilindro|dioptria }} × {{ r.oi_eje|grados }}</td>
+                <td><a href="{{ url_for('receta_ver', receta_id=r.id) }}">Ver / imprimir</a></td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Sin recetas todavía.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3 class="separado">Citas</h3>
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead><tr><th>Fecha</th><th>Motivo</th><th>Estado</th><th>Notas internas</th><th>Acciones</th></tr></thead>
+        <tbody>
+        {% for c in citas %}
+            <tr>
+                <td>{{ c.fecha_hora|fecha_larga }}<br><small>{{ c.fecha_hora|hora }}</small></td>
+                <td>{{ c.motivo }}</td>
+                <td>{{ insignia_estado(c.estado) }}</td>
+                <td>
+                    {% if c.doctor_id == current_user.id %}
+                    <form method="POST" action="{{ url_for('doctor_cita_notas', cita_id=c.id) }}" class="form-notas">
+                        <textarea name="notas" rows="2" placeholder="Notas internas">{{ c.notas_doctor or '' }}</textarea>
+                        <button type="submit" class="enlace">Guardar</button>
+                    </form>
+                    {% else %}
+                        {{ c.notas_doctor or '—' }}
+                    {% endif %}
+                </td>
+                <td class="acciones">
+                    {% if c.doctor_id == current_user.id %}
+                        {% if c.estado in ('pendiente', 'confirmada') %}
+                            <a href="{{ url_for('doctor_reprogramar', cita_id=c.id) }}">Reprogramar</a>
+                        {% endif %}
+                        {% if c.estado != 'cancelada' %}
+                            <a href="{{ url_for('doctor_receta_nueva', cliente_id=cliente.id, cita=c.id) }}">Receta</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Sin citas.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3 class="separado">Pruebas de visión (hechas en la app)</h3>
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead><tr><th>Fecha</th><th>Prueba</th><th>Resultado</th><th>Estado</th></tr></thead>
+        <tbody>
+        {% for f in pruebas %}
+            <tr>
+                <td>{{ f.fecha|fecha_larga }}</td>
+                <td>{{ f.nombre }}</td>
+                <td>{{ f.mensaje }}</td>
+                <td>
+                    {% if f.nivel == 'bien' %}
+                        <span class="insignia verde">Dentro de lo esperado</span>
+                    {% else %}
+                        <span class="insignia amarilla">Conviene revisarlo</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">El cliente no ha hecho pruebas.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

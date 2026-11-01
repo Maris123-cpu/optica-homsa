@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo %}Agendar cita · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Agendar cita</h2>
+
+<div class="tarjeta agendar">
+    <h3>1. Elige el día</h3>
+    <form method="GET" class="fila-form">
+        {% if doctores|length > 1 %}
+            <select name="doctor">
+                {% for d in doctores %}
+                    <option value="{{ d.id }}" {% if d.id == doctor.id %}selected{% endif %}>
+                        {{ d.nombre_completo }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endif %}
+        <input type="date" name="fecha" min="{{ hoy }}" max="{{ maximo }}"
+               value="{{ fecha or '' }}" required>
+        <button type="submit" class="boton">Ver horarios</button>
+    </form>
+    <p class="nota-izq">Atendemos de 8:00 am a 5:00 pm. Cada cita dura 30 minutos.</p>
+</div>
+
+{% if fecha %}
+<div class="tarjeta agendar separado">
+    <h3>2. Elige la hora · {{ fecha|fecha_larga }}</h3>
+
+    {% if horarios %}
+    <form method="POST">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <input type="hidden" name="doctor_id" value="{{ doctor.id }}">
+
+        <div class="horarios">
+            {% for h in horarios %}
+            <label class="horario">
+                <input type="radio" name="hora" value="{{ h.strftime('%H:%M') }}" required>
+                <span>{{ h|hora }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <h3>3. Motivo de la cita</h3>
+        <select name="motivo">
+            <option>Examen de la vista</option>
+            <option>Revisión de lentes</option>
+            <option>Ajuste de armazón</option>
+            <option>Entrega de lentes</option>
+            <option>Otro</option>
+        </select>
+
+        <button type="submit" class="boton">Confirmar cita</button>
+    </form>
+    {% else %}
+        <p>No hay horarios disponibles ese día (puede ser un día sin atención o ya está lleno). Prueba con otra fecha.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

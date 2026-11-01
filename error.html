@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="tarjeta formulario">
+    <h2>{{ titulo }}</h2>
+    <p>{{ mensaje }}</p>
+    <a class="boton" href="{{ url_for('inicio') }}">Volver al inicio</a>
+</div>
+{% endblock %}

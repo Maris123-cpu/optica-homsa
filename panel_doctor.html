@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}Panel del doctor · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Panel del doctor</h2>
+<p>Bienvenido, {{ current_user.nombre_completo }}.</p>
+
+<div class="rejilla">
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('agenda_doctor') }}">
+        <h3>📅 Agenda</h3>
+        <p>Citas hoy: <strong>{{ citas_hoy }}</strong></p>
+        <p>Por confirmar: <strong>{{ pendientes }}</strong></p>
+    </a>
+
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('doctor_clientes') }}">
+        <h3>🧑 Clientes</h3>
+        <p>Total registrados: <strong>{{ total_clientes }}</strong></p>
+        <p>Buscar y ver expedientes →</p>
+    </a>
+
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('doctor_lentes') }}">
+        <h3>👓 Catálogo</h3>
+        <p>Lentes registrados: <strong>{{ total_lentes }}</strong></p>
+        <p>Gestionar →</p>
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Clientes · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="encabezado-fila">
+    <h2>Clientes</h2>
+    <a class="boton" href="{{ url_for('doctor_cliente_nuevo') }}">+ Nuevo cliente</a>
+</div>
+
+<form method="GET" class="fila-form separado">
+    <input type="search" name="q" value="{{ q }}" class="campo-busqueda"
+           placeholder="Buscar por nombre, correo o teléfono">
+    <button type="submit" class="boton">Buscar</button>
+    {% if q %}<a href="{{ url_for('doctor_clientes') }}" class="limpiar">Limpiar</a>{% endif %}
+</form>
+
+<p class="nota-izq">{{ paginacion.total }} cliente(s)</p>
+
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead>
+            <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Registro</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for c in paginacion.items %}
+            <tr>
+                <td><a href="{{ url_for('doctor_expediente', cliente_id=c.id) }}">{{ c.apellidos }}, {{ c.nombre }}</a></td>
+                <td>{{ c.email }}</td>
+                <td>{{ c.telefono or '—' }}</td>
+                <td>{{ c.creado_en.strftime('%d/%m/%Y') }}</td>
+                <td><a href="{{ url_for('doctor_expediente', cliente_id=c.id) }}">Expediente →</a></td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">No se encontraron clientes.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if paginacion.pages > 1 %}
+<div class="paginacion">
+    {% if paginacion.has_prev %}
+        <a href="{{ url_for('doctor_clientes', q=q, pagina=paginacion.prev_num) }}">← Anterior</a>
+    {% endif %}
+    <span>Página {{ paginacion.page }} de {{ paginacion.pages }}</span>
+    {% if paginacion.has_next %}
+        <a href="{{ url_for('doctor_clientes', q=q, pagina=paginacion.next_num) }}">Siguiente →</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

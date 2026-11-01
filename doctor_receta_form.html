@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo %}Nueva receta · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<a href="{{ url_for('doctor_expediente', cliente_id=cliente.id) }}">← Volver al expediente</a>
+<h2>Nueva receta para {{ cliente.nombre_completo }}</h2>
+{% if cita %}
+    <p class="nota-izq">Enlazada a la cita del {{ cita.fecha_hora|fecha_larga }}, {{ cita.fecha_hora|hora }}.</p>
+{% endif %}
+
+<form method="POST" class="tarjeta separado">
+    {% if cita %}<input type="hidden" name="cita" value="{{ cita.id }}">{% endif %}
+
+    <div class="tabla-contenedor">
+    <table class="tabla receta-form">
+        <thead>
+            <tr><th></th><th>Esfera</th><th>Cilindro</th><th>Eje (0–180°)</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Ojo derecho (OD)</th>
+                <td><input type="number" step="0.25" name="od_esfera" value="{{ valores.get('od_esfera', '') }}"></td>
+                <td><input type="number" step="0.25" name="od_cilindro" value="{{ valores.get('od_cilindro', '') }}"></td>
+                <td><input type="number" step="1" min="0" max="180" name="od_eje" value="{{ valores.get('od_eje', '') }}"></td>
+            </tr>
+            <tr>
+                <th>Ojo izquierdo (OI)</th>
+                <td><input type="number" step="0.25" name="oi_esfera" value="{{ valores.get('oi_esfera', '') }}"></td>
+                <td><input type="number" step="0.25" name="oi_cilindro" value="{{ valores.get('oi_cilindro', '') }}"></td>
+                <td><input type="number" step="1" min="0" max="180" name="oi_eje" value="{{ valores.get('oi_eje', '') }}"></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="fila-form separado">
+        <div>
+            <label>Adición (lectura)</label>
+            <input type="number" step="0.25" name="adicion" value="{{ valores.get('adicion', '') }}" class="campo-medida">
+        </div>
+        <div>
+            <label>Distancia pupilar (mm)</label>
+            <input type="number" step="0.5" name="distancia_pupilar" value="{{ valores.get('distancia_pupilar', '') }}" class="campo-medida">
+        </div>
+    </div>
+
+    <label class="etiqueta-bloque">Observaciones</label>
+    <textarea name="observaciones" rows="4" class="campo-ancho">{{ valores.get('observaciones', '') }}</textarea>
+
+    {% if cita and cita.estado in ('pendiente', 'confirmada') %}
+    <label class="casilla-linea">
+        <input type="checkbox" name="completar" {% if not valores or 'completar' in valores %}checked{% endif %}>
+        Marcar la cita como completada al guardar
+    </label>
+    {% endif %}
+
+    <button type="submit" class="boton">Guardar receta</button>
+    <a href="{{ url_for('doctor_expediente', cliente_id=cliente.id) }}" class="limpiar">Cancelar</a>
+</form>
+{% endblock %}

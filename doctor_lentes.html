@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Administrar catálogo · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<div class="encabezado-fila">
+    <h2>Administrar catálogo</h2>
+    <a href="{{ url_for('doctor_lente_nuevo') }}" class="boton">+ Agregar lente</a>
+</div>
+
+<div class="tarjeta tabla-contenedor">
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Foto</th><th>Nombre</th><th>Marca</th>
+                <th>Precio</th><th>Estado</th><th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lente in lentes %}
+            <tr>
+                <td>
+                    {% if lente.imagen %}
+                        <img class="mini" src="{{ url_for('static', filename='img/lentes/' + lente.imagen) }}" alt="">
+                    {% else %}
+                        <span class="mini sin-imagen">👓</span>
+                    {% endif %}
+                </td>
+                <td><a href="{{ url_for('lente_detalle', lente_id=lente.id) }}">{{ lente.nombre }}</a></td>
+                <td>{{ lente.marca }}</td>
+                <td>${{ "{:,.2f}".format(lente.precio) }}</td>
+                <td>
+                    {% if lente.disponible %}
+                        <span class="insignia verde">Visible</span>
+                    {% else %}
+                        <span class="insignia gris">Oculto</span>
+                    {% endif %}
+                </td>
+                <td class="acciones">
+                    <a href="{{ url_for('doctor_lente_editar', lente_id=lente.id) }}">Editar</a>
+
+                    <form method="POST" action="{{ url_for('doctor_lente_disponibilidad', lente_id=lente.id) }}">
+                        <button type="submit" class="enlace">
+                            {{ 'Ocultar' if lente.disponible else 'Mostrar' }}
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ url_for('doctor_lente_eliminar', lente_id=lente.id) }}"
+                          onsubmit="return confirm('¿Eliminar este lente? No se puede deshacer.');">
+                        <button type="submit" class="enlace peligro">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">Aún no hay lentes. Agrega el primero.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

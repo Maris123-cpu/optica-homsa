@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Test de visión · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Test de visión</h2>
+<div class="alerta info">
+    Estas pruebas son una <strong>orientación rápida</strong>. No sustituyen un examen
+    visual con el doctor ni sirven para diagnosticar. Si algo te preocupa, agenda una cita.
+</div>
+
+<div class="rejilla">
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('test_agudeza') }}">
+        <h3>🔤 Agudeza visual</h3>
+        <p>Qué tan nítido ves de lejos. Necesitas una tarjeta de plástico y 1 metro de distancia.</p>
+        <p class="etiquetas">≈ 3 minutos</p>
+    </a>
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('test_daltonismo') }}">
+        <h3>🎨 Visión de colores</h3>
+        <p>Encuentra los números escondidos entre puntos de colores.</p>
+        <p class="etiquetas">≈ 2 minutos</p>
+    </a>
+    <a class="tarjeta enlace-tarjeta" href="{{ url_for('test_astigmatismo') }}">
+        <h3>🎯 Astigmatismo</h3>
+        <p>Mira una rueda de líneas y dinos si todas se ven igual.</p>
+        <p class="etiquetas">≈ 1 minuto</p>
+    </a>
+</div>
+
+<p class="separado"><a href="{{ url_for('test_historial') }}">Ver mi historial de pruebas →</a></p>
+{% endblock %}

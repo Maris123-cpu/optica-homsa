@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% from "_macros.html" import insignia_estado %}
+{% block titulo %}Agenda · Óptica HomSa{% endblock %}
+
+{% block contenido %}
+<h2>Agenda del doctor</h2>
+
+<div class="tarjeta navegacion-dia">
+    <a href="{{ url_for('agenda_doctor', fecha=anterior) }}">← Día anterior</a>
+    <strong>{{ fecha|fecha_larga }}</strong>
+    <a href="{{ url_for('agenda_doctor', fecha=siguiente) }}">Día siguiente →</a>
+</div>
+
+<form method="GET" class="fila-form separado">
+    <input type="date" name="fecha" value="{{ fecha }}">
+    <button type="submit" class="boton">Ir a la fecha</button>
+    {% if fecha != hoy %}
+        <a href="{{ url_for('agenda_doctor') }}" class="limpiar">Volver a hoy</a>
+    {% endif %}
+</form>
+
+<div class="tarjeta tabla-contenedor separado">
+    <table class="tabla">
+        <thead>
+            <tr><th>Hora</th><th>Cliente</th><th>Teléfono</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+        {% for c in citas %}
+            <tr>
+                <td><strong>{{ c.fecha_hora|hora }}</strong></td>
+                <td><a href="{{ url_for('doctor_expediente', cliente_id=c.cliente_id) }}">{{ c.cliente.nombre_completo }}</a></td>
+                <td>{{ c.cliente.telefono or '—' }}</td>
+                <td>{{ c.motivo }}</td>
+                <td>{{ insignia_estado(c.estado) }}</td>
+                <td class="acciones">
+                            {% if c.estado in ('pendiente', 'confirmada') %}
+                        <a href="{{ url_for('doctor_reprogramar', cita_id=c.id) }}">Reprogramar</a>
+                    {% endif %}
+                    {% if c.estado != 'cancelada' %}
+                        <a href="{{ url_for('doctor_receta_nueva', cliente_id=c.cliente_id, cita=c.id) }}">Receta</a>
+                    {% endif %}
+
+                    {% if c.estado == 'pendiente' %}
+                        <form method="POST" action="{{ url_for('doctor_cita_estado', cita_id=c.id) }}">
+                            <input type="hidden" name="estado" value="confirmada">
+                            <button type="submit" class="enlace">Confirmar</button>
+                        </form>
+                    {% endif %}
+                    {% if c.estado == 'confirmada' %}
+                        <form method="POST" action="{{ url_for('doctor_cita_estado', cita_id=c.id) }}">
+                            <input type="hidden" name="estado" value="completada">
+                            <button type="submit" class="enlace">Marcar completada</button>
+                        </form>
+                    {% endif %}
+                    {% if c.estado in ('pendiente', 'confirmada') %}
+                        <form method="POST" action="{{ url_for('doctor_cita_estado', cita_id=c.id) }}"
+                              onsubmit="return confirm('¿Cancelar esta cita?');">
+                            <input type="hidden" name="estado" value="cancelada">
+                            <button type="submit" class="enlace peligro">Cancelar</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">No hay citas para este día.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
